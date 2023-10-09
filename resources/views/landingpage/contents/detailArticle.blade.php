@@ -12,6 +12,15 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Shortcut Icon -->
         <link rel="shortcut icon" href="{{ asset('/') }}assets/img/logo.jpg">
+        <style>
+            .responsive-img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                max-width: 50%;
+                height: auto;
+            }
+        </style>
         <title>Omah Batik Sukun</title>
     </head>
 <body>
@@ -28,8 +37,9 @@
             <div class="row" style="padding-top: 100px;">
                 <div class="col-lg-12">
                     @if( in_array(pathinfo($article->image, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg','PNG', 'JPG', 'JPEG']))
-                        <img src="{{ asset('/assets/img/product') }}/{{$article->image}}" class="card-img-top" alt="..." >
+                        <img src="{{ asset('/assets/img/article') }}/{{$article->image}}" class="card-img-top responsive-img" alt="..." >
                     @else
+                    <div>GADA GAMBAR</div>
                         <img src="https://www.freeiconspng.com/uploads/file-txt-icon--icon-search-engine--iconfinder-14.png"
                         class="card-img-top" alt="...">
                     @endif

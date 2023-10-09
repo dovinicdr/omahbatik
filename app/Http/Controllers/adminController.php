@@ -34,6 +34,7 @@ class adminController extends Controller
 
         $db_password = $users->password;
         $hashed_password = Hash::check($request->password, $db_password);
+        // dd($hashed_password);
 
         if ($hashed_password) {
             $users->token = Str::random(20);
@@ -140,7 +141,7 @@ class adminController extends Controller
     public function create_product(Request $request){
         // Validasi request
         $request->validate([
-            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048', 
+            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // Save Image to directory
@@ -173,10 +174,10 @@ class adminController extends Controller
         // Delete file in directory
         $gambar = ProductModel::where('id',$id)->first();
         File::delete('assets/img/product/'.$gambar->image);
-     
+
         // Delete data in database
         $delete_product = ProductModel::where('id',$id)->delete();
-     
+
         if ($delete_product) {
             return redirect()->back()
             ->with('flash_message', 'Produk Berhasil Dihapus!')
@@ -199,7 +200,7 @@ class adminController extends Controller
     public function edit_product(Request $request){
         // Validasi request
         $request->validate([
-            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048', 
+            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // Save Image to directory
@@ -208,7 +209,7 @@ class adminController extends Controller
         if($request->oldImage){
             File::delete('assets/img/product/'.$request->oldImage);
         }
-    
+
         $namaFile = $file->getClientOriginalName();
         $file->move('assets/img/product',$file->getClientOriginalName());
 
@@ -234,7 +235,7 @@ class adminController extends Controller
     public function create_article(Request $request){
         // Validasi request
         $request->validate([
-            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048', 
+            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // Save Image to directory
@@ -266,10 +267,10 @@ class adminController extends Controller
         // Delete file in directory
         $gambar = ArticleModel::where('id',$id)->first();
         File::delete('assets/img/article/'.$gambar->image);
-     
+
         // Delete data in database
         $delete_article = ArticleModel::where('id',$id)->delete();
-     
+
         if ($delete_article) {
             return redirect()->back()
             ->with('flash_message', 'Artikel Berhasil Dihapus!')
@@ -290,22 +291,48 @@ class adminController extends Controller
     }
 
     public function edit_article(Request $request){
-        // Validasi request
-        $request->validate([
-            'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048', 
-        ]);
+        $article = ArticleModel::find($request->id);
+        $namaFileDatabase = $article->image;
 
-        // Save Image to directory
-        $file =  $request->file('image');
+        // Mendapatkan nama file yang diunggah, jika ada
+        $uploadedFile = $request->file('image');
+        $uploadedFileName = null;
 
-        if($request->oldImage){
-            File::delete('assets/img/article/'.$request->oldImage);
+        if ($uploadedFile) {
+            $uploadedFileName = $uploadedFile->getClientOriginalName();
         }
-    
-        $namaFile = $file->getClientOriginalName();
-        $file->move('assets/img/article',$file->getClientOriginalName());
 
-        $article = ArticleModel::where('id',$request->id)->update([
+        // Validasi hanya jika file diunggah dan nama file tidak sama dengan nama file di database
+        if ($uploadedFileName && $namaFileDatabase !== $uploadedFileName) {
+            // Validasi file baru yang diunggah
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            ],
+            [
+                'image.required' => 'Gambar Wajib diisi',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+
+            // Jika validasi berhasil, gunakan nama file yang baru diunggah
+            $namaFile = $uploadedFileName;
+
+            // Pindahkan file baru ke direktori
+            $uploadedFile->move('assets/img/article', $namaFile);
+
+            // Hapus file lama jika ada
+            if ($namaFileDatabase && File::exists('assets/img/article/'.$namaFileDatabase)){
+                File::delete('assets/img/article/'.$namaFileDatabase);
+            }
+        } else {
+            // Jika tidak ada file baru yang diunggah, gunakan nama file dari database
+            $namaFile = $namaFileDatabase;
+        }
+
+        // Update data artikel
+        $article->update([
             'article_title' => $request->article_title,
             'image' => $namaFile,
             'description' => $request->description,

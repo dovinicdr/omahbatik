@@ -32,6 +32,9 @@ Artikel
                 <div class="input-group">
                   <input type="file" id="image" name="image" onchange="previewImage()">
                 </div>
+                @error('image')
+                    <small>{{ $message }}</small>
+                @enderror
               </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Deskripsi</label>
@@ -39,7 +42,7 @@ Artikel
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Link (Opsional)</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" name="discount" placeholder="Masukan Link (Optional)" value="{{ $article->optional_link }}">
+                <input type="text" class="form-control" id="exampleInputEmail1" name="optional_link" placeholder="Masukan Link (Optional)" value="{{ $article->optional_link }}">
             </div>
             <a href="{{ url('admin/article') }}">
                 <button type="button" class="btn btn-default float-sm-left">Keluar</button>
@@ -64,7 +67,7 @@ Artikel
         imgPreview.src = oFREvent.target.result;
       }
     }
-    
+
   </script>
 
 @endsection

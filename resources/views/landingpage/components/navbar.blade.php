@@ -10,26 +10,28 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url('/') }}#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('/') }}#about">Tentang</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('/') }}#product">Produk</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('/') }}#articles">Artikel</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('/') }}#contact">Kontak</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('/admin') }}">Login</a>
-              </li>
+                <a class="nav-link active" id="home-link" aria-current="page" href="{{ url('/') }}#">Home</a>
+                <a class="nav-link" id="about-link" href="{{ url('/') }}#about">Tentang</a>
+                <a class="nav-link" id="product-link" href="{{ url('/') }}#product">Produk</a>
+                <a class="nav-link" id="articles-link" href="{{ url('/') }}#articles">Artikel</a>
+                <a class="nav-link" id="contact-link" href="{{ url('/') }}#contact">Kontak</a>
+                <a class="nav-link" id="login-link" href="{{ url('/admin') }}">Login</a>
             </ul>
           </div>
         </div>
     </nav>
 </header>
+
+<script>
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Hapus kelas active dari semua tautan navbar
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Tambahkan kelas active ke tautan yang diklik
+            this.classList.add('active');
+        });
+    });
+</script>

@@ -13,13 +13,26 @@
     <!-- Shortcut Icon -->
     <link rel="shortcut icon" href="{{ asset('/') }}assets/img/logo.png">
     <title>Omah Batik Sukun</title>
+
+    <style>
+        .card {
+            /* Gaya asal */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animasi perubahan ukuran dan bayangan */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Perbesar elemen saat cursor menyentuh */
+            box-shadow: 0 0 15px 0 rgba(255, 127, 41, 0.5); /* Tampilkan efek shadow saat cursor menyentuh */
+        }
+
+    </style>
 </head>
 <body>
 <!-- Navbar -->
 @include('landingpage.components.navbar')
 
 <!-- Hero -->
-<section id="hero" class="d-flex align-items-center justify-content-center">
+<section id="hero" class="d-flex align-items-center justify-content-center py-sm-5 py-lg-5 mt-5">
   <div class="container position-relative">
       <h1>Selamat Datang di Omah Batik Sukun</h1>
       <h4>kualitas yang bersaing dan berstandard international, mulai dari coloring, fabric, dan garment quality.</h4>
@@ -71,18 +84,18 @@
             <div class="card" style="width: 25rem;">
                 <a href="/detail_product/{{ $product->id }}" style="text-decoration: none; color: inherit;">
                 @if( in_array(pathinfo($product->image, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg','PNG', 'JPG', 'JPEG']))
-                    <img src="{{ asset('/assets/img/product') }}/{{$product->image}}" class="card-img-top" alt="..." 
+                    <img src="{{ asset('/assets/img/product') }}/{{$product->image}}" class="card-img-top" alt="..."
                     style="
-                    object-fit: none; 
-                    object-position: center; 
+                    object-fit: none;
+                    object-position: center;
                     height: 280px;
                     width: 100%;">
                 @else
                     <img src="https://www.freeiconspng.com/uploads/file-txt-icon--icon-search-engine--iconfinder-14.png"
-                    class="card-img-top" alt="..." 
+                    class="card-img-top" alt="..."
                     style="
-                    object-fit: none; 
-                    object-position: center; 
+                    object-fit: none;
+                    object-position: center;
                     height: 280px;
                     width: 100%;">
                 @endif
@@ -103,9 +116,9 @@
           </div>
 
       </div>
-  </div> 
+  </div>
 </section>
-  
+
 
   <!-- Services -->
 <section id="services" class="container-fluid">
@@ -156,57 +169,57 @@
     <div class="row" style="padding-top: 30px;">
       @foreach ($dataArticle as $article)
       <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-3">
-        <div class="card" style="width: 25rem;">
-          @if ( $article->optional_link != NULL )
-            <iframe src="{{ $article->optional_link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen 
-              style="
-              object-fit: none; 
-              object-position: center; 
-              height: 280px;
-              width: 100%;"></iframe>
-          @else
-            @if( in_array(pathinfo($article->image, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg','PNG', 'JPG', 'JPEG']))
-                <img src="{{ asset('/assets/img/article') }}/{{$article->image}}" class="card-img-top" alt="..." 
+        <a href="/detail_article/{{ $article->id }}" style="text-decoration: none; color: inherit;">
+            <div class="card" style="width: 25rem;">
+            @if ( $article->optional_link != NULL )
+                <iframe src="{{ $article->optional_link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
                 style="
-                object-fit: none; 
-                object-position: center; 
+                object-fit: none;
+                object-position: center;
                 height: 280px;
-                width: 100%;">
+                width: 100%;"></iframe>
             @else
-                <img src="https://www.freeiconspng.com/uploads/file-txt-icon--icon-search-engine--iconfinder-14.png"
-                class="card-img-top" alt="..." 
-                style="
-                object-fit: none; 
-                object-position: center; 
-                height: 280px;
-                width: 100%;">
+                @if( in_array(pathinfo($article->image, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg','PNG', 'JPG', 'JPEG']))
+                    <img src="{{ asset('/assets/img/article') }}/{{$article->image}}" class="card-img-top" alt="..."
+                    style="
+                    object-fit: none;
+                    object-position: center;
+                    height: 280px;
+                    width: 100%;">
+                @else
+                    <img src="https://www.freeiconspng.com/uploads/file-txt-icon--icon-search-engine--iconfinder-14.png"
+                    class="card-img-top" alt="..."
+                    style="
+                    object-fit: none;
+                    object-position: center;
+                    height: 280px;
+                    width: 100%;">
+                @endif
             @endif
-          @endif
-          <div class="card-body">
-            <h5 class="card-text">{{ $article->article_title }}</h5>
-            <p class="card-text-detail mb-1" style="margin: 0 auto; font-size: 12px; color: rgb(80, 82, 82);">
-              <i class="fa fa-clock-o"></i>&nbsp; {{ $article->created_at->format('d/m/Y')  }}
-            </p>
-            <p class="card-text-detail" style="margin: 0 auto; font-size: 12px; color: rgb(80, 82, 82);">
-              {{ Str::limit($article->description, 50) }}
-            </p>
-            <a href="/detail_article/{{ $article->id }}" style="text-decoration: none; color: inherit;">
-              <h6 class="text mt-2" style="font-style: italic;color: rgb(80, 82, 82);">Read More ></h6>
-            </a>
-            {{-- @if ( $article->updated_at != $article->created_at )
-                <div class="form-text text-secondary text-end mb-2">
-                *Article has been edited at {{$article->updated_at->format('d/m/Y')}}
-                </div>
-            @endif --}}
-          </div>
-        </div>
+            <div class="card-body">
+                <h5 class="card-text">{{ $article->article_title }}</h5>
+                <p class="card-text-detail mb-1" style="margin: 0 auto; font-size: 12px; color: rgb(80, 82, 82);">
+                <i class="fa fa-clock-o"></i>&nbsp; {{ $article->created_at->format('d/m/Y')  }}
+                </p>
+                <p class="card-text-detail" style="margin: 0 auto; font-size: 12px; color: rgb(80, 82, 82);">
+                {{ Str::limit($article->description, 50) }}
+                </p>
+                <h6 class="text mt-2" style="font-style: italic;color: rgb(80, 82, 82);">Read More ></h6>
+                {{-- @if ( $article->updated_at != $article->created_at )
+                    <div class="form-text text-secondary text-end mb-2">
+                    *Article has been edited at {{$article->updated_at->format('d/m/Y')}}
+                    </div>
+                @endif --}}
+            </div>
+            </div>
+        </a>
       </div>
       @endforeach
       {{-- Pagination --}}
       <div class="d-flex justify-content-end">
         {{ $dataArticle->links('pagination::bootstrap-4') }}
       </div>
-      
+
     </div>
   </div>
 </section>
@@ -294,7 +307,7 @@
             <div class="card-body">
               <h5 class="card-text">Batik Motif Batik Topeng</h5>
               <p class="card-text-detail" style="margin: 0 auto; font-size: 14px; color: rgb(80, 82, 82);">Filosofi motif dari buah dan daun sukun ini terinspirasi dari masyarakat lokal yang menyebut “Sukun” sebagai “Pohon Kehidupan” karena tanamana ini dapat memenuhi dan menyediakan begitu banyak kebutuhan untuk seseorang.
-                Buah dan daun mudanya dapat dimakan, batangnya yang ringan bisa digunakan untuk membangun rumah dan kano tradisional, dan kulit kayunya digunakan untuk membuat pakaian. 
+                Buah dan daun mudanya dapat dimakan, batangnya yang ringan bisa digunakan untuk membangun rumah dan kano tradisional, dan kulit kayunya digunakan untuk membuat pakaian.
                 Beberapa ahli tanaman bahkan menyatakan bahwa “Sukun” adalah buah super untuk masa depan, yang punya potensi jadi solusi masalah kelaparan dunia.
                 </p>
               <h5 class="text mt-2">Rp 100.000</h5>
