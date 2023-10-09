@@ -25,6 +25,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url('/') }}#contact">Kontak</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url('/admin') }}">Login</a>
+              </li>
             </ul>
           </div>
         </div>

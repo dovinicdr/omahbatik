@@ -27,16 +27,20 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Notifications Dropdown Menu -->
+      <span class="dropdown-item dropdown-header">Selamat Datang,&nbsp;<strong>{{session()->get('name_user')}}</strong></span>
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-user"></i>
+          <i class="fas fa-solid fa-user"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header"><strong>{{session()->get('username')}}</strong></span>
-          <div class="dropdown-divider"></div>
-          <a href="{{route('action_logout')}}" class="dropdown-item">
-            <i class="fas fa-power-off mr-2"></i> Logout
-          </a>
+        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+          <form method="POST" action={{ route('action_logout') }}>
+            @csrf
+            <div class="dropdown-item">
+              <input name="token" type="hidden" value={{session()->get('token')}} />
+              <button class="btn btn-danger w-100"><i class="fas fa-power-off mr-2"></i> Logout</button>
+            </div> 
+          </form> 
+        </div> 
       </li>
     </ul>
   </nav>

@@ -32,12 +32,19 @@ Route::controller(adminController::class)->group(function(){
     Route::get('/admin/dashboard', 'dashboard')->name('dashboard');
     Route::get('/admin/product', 'product')->name('product');
     Route::get('/admin/article', 'article')->name('article');
+    Route::get('/admin/list_admin', 'admins')->name('admins');
 
     //Login
     //Action Login
     Route::post('/admin/login/action_login', 'action_login')->name('action_login');
     //Action Logout
-    Route::get('/admin/logout', 'action_logout')->name('action_logout')->middleware('auth');
+    Route::post('/admin/logout', 'action_logout')->name('action_logout');
+
+    //Admin
+    // Go To Form Add Admin
+    Route::get('/admin/list_admin/form_admin', 'form_admin')->name('form_admin');
+    // Create New Product
+    Route::post('/admin/list_admin/create_admin', 'create_admin')->name('create_admin');
 
     //Product
     // Create New Product

@@ -21,6 +21,15 @@
         </a>
       </li>
       <li class="nav-item has-treeview">
+        <a href="{{ url('/admin/list_admin') }}" class="nav-link">
+          <i class="nav-icon fas fa-solid fa-users"></i>
+          <p>
+            Admin
+            <i class="right fas fa-angle-right"></i>
+          </p>
+        </a>
+      </li>
+      <li class="nav-item has-treeview">
         <a href="{{ url('admin/product') }}" class="nav-link">
           <i class="nav-icon fas fa-solid fa-box"></i>
           <p>

@@ -8,9 +8,10 @@ use App\Models\ArticleModel;
 use App\Models\Users;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-
-use Session;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class adminController extends Controller
 {
@@ -20,49 +21,60 @@ class adminController extends Controller
 
     public function login()
     {
-        if (Auth::check()) {
-            return redirect('adminLayout.contents.product');
-        }else{
-            return view('adminLayout.contents.auth.login');
-        }
+        return view('adminLayout.contents.auth.login');
     }
 
     public function action_login(Request $request){
-
         $users = Users::where('username', $request->username)->first();
 
         if ($users == null) {
-            Session::flash('error', 'Username Salah');
-            return redirect()->back();
+            return redirect()->back()
+            ->with('error', 'Username tidak ada!');
         }
 
         $db_password = $users->password;
-        if ($db_password == $request->password) {
+        $hashed_password = Hash::check($request->password, $db_password);
+
+        if ($hashed_password) {
+            $users->token = Str::random(20);
+            $users->save();
+            $request->session()->put('token', $users->token);
             $request->session()->put('username', $users->username);
+            $request->session()->put('name_user', $users->name_user);
             return to_route('dashboard');
         } else {
-            Session::flash('error', 'Username / Password Salah');
-            return to_route('login');
+            return redirect()->back()
+            ->with('error', 'Maaf, data yang anda masukan kurang sesuai!');
         }
     }
 
-    public function action_logout()
-    {
-        Auth::logout();
- 
-        request()->session()->invalidate();
- 
-        request()->session()->regenerateToken();
- 
-        return redirect('login');
+    public function action_logout(Request $request){
+        Users::where('token', $request->token)->update([
+            'token' => NULL
+        ]);
+
+        Session::pull('token');
+        return to_route('login');
     }
 
     public function dashboard(){
-        $dataProduct = ProductModel::all();
-        $dataArticle = ArticleModel::all();
-        return view('adminLayout.contents.dashboard', [
-            'dataProduct' => $dataProduct,
-            'dataArticle' => $dataArticle
+        if (Session::has('token')) {
+            $users = Users::where('token', Session::get('token'))->first();
+            $dataProduct = ProductModel::all();
+            $dataArticle = ArticleModel::all();
+            return view('adminLayout.contents.dashboard', [
+                'dataProduct' => $dataProduct,
+                'dataArticle' => $dataArticle
+            ]);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function admins(){
+        $dataAdmins = Users::all();
+        return view('adminLayout.contents.admins', [
+            'dataAdmins' => $dataAdmins
         ]);
     }
 
@@ -78,6 +90,51 @@ class adminController extends Controller
         return view('adminLayout.contents.article', [
             'dataArticle' => $dataArticle
         ]);
+    }
+
+    public function form_admin(){
+        return view('adminLayout.contents.add.addNewAdmin');
+    }
+
+    public function create_admin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|min:6|unique:Users',
+            'name_user' => 'required',
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6'],[
+                'username.required' => 'Kolom username wajib diisi.',
+                'username.unique' => 'Username yang anda masukan sudah tersedia.',
+                'username.min' => 'Username setidaknya harus berisi 6 karakter',
+                'name_user.required' => 'Kolom Nama Admin wajib diisi.',
+                'password.min' => 'Password setidaknya harus berisi 6 karakter',
+                'password.same' => 'Password dan Konfirmasi password yang dimasukan harus sama.',
+                'password_confirmation.min' => 'Konfirmasi Password setidaknya harus berisi 6 karakter',
+        ]);
+
+        $current_date_time = date('Y-m-d H:i:s');
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }else{
+            $created = Users::create([
+                "username" => $request->username,
+                "name_user" => $request->name_user,
+                "password" => bcrypt($request->password),
+                "created_at" => $current_date_time,
+            ]);
+        }
+
+        if ($created) {
+            return redirect('/admin/list_admin')
+            ->with('flash_message', 'Admin Baru Berhasil Ditambahkan!')
+            ->with('flash_type', 'alert alert-success');
+        } else {
+            return redirect('/admin/list_admin')
+            ->with('flash_message', 'Admin Baru Gagal Ditambahkan!')
+            ->with('flash_type', 'alert alert-danger');
+        }
     }
 
     public function create_product(Request $request){
