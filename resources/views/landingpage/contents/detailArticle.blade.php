@@ -51,7 +51,7 @@
                         </p>
                         <h2 class="card-text">{{$article->article_title}}</h2>
                         <p class="card-text-detail" style="margin: 0 auto; color: rgb(80, 82, 82);">
-                            {{$article->description}}
+                            {!! $article->description !!}
                         </p>
                     </div>
                 </div>

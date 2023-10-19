@@ -5,7 +5,7 @@
 @endsection
 
 @section('breadcrumb')
-Artikel
+    Artikel
 @endsection
 
 @section('content')
@@ -38,7 +38,8 @@ Artikel
               </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Deskripsi</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" name="description" placeholder="Masukan Deskripsi" value="{{ $article->description }}">
+                {{-- <input type="text" class="form-control" id="exampleInputEmail1" name="description" placeholder="Masukan Deskripsi" value="{{ $article->description }}"> --}}
+                <textarea name="description" placeholder="Masukkan Deskripsi">{{ $article->description }}</textarea>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Link (Opsional)</label>

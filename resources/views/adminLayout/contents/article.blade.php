@@ -86,8 +86,8 @@
 
 {{-- Modal  Create article--}}
 <div class="modal fade" id="modal-create">
-<div class="modal-dialog">
-  <div class="modal-content">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title">Tambahkan Artikel Baru</h4>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -110,7 +110,8 @@
         </div>
         <div class="form-group">
           <label for="exampleInputEmail1">Deskripsi</label>
-          <input type="text" class="form-control" name="description" placeholder="Masukan Deskripsi" required>
+          <textarea name="description" placeholder="Masukkan Deskripsi"></textarea>
+          {{-- <input type="text" class="form-control" name="description" placeholder="Masukan Deskripsi" required> --}}
         </div>
         <div class="form-group">
           <label for="exampleInputEmail1">Link (Opsional)</label>
@@ -162,6 +163,6 @@
           }
         });
     });
-  
+
 </script>
 @endsection
